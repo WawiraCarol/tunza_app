@@ -1,5 +1,6 @@
 import 'package:tunza_app/core/enums/viewstate.dart';
 import 'package:tunza_app/core/models/child.dart';
+import 'package:tunza_app/core/models/user.dart';
 import 'package:tunza_app/core/services/api.dart';
 import 'package:tunza_app/core/services/authentication_service.dart';
 import 'package:tunza_app/core/viewmodels/base_model.dart';
@@ -9,6 +10,7 @@ class HomeModel extends BaseModel{
   AuthenticationService _authenticationService=locator<AuthenticationService>();
   Api _api=locator<Api>();
   List<Child> childList=[];
+  //todo: display user name and email
   fetchChildren()async{
     setState(ViewState.Busy);
 

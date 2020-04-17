@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tunza_app/core/enums/viewstate.dart';
-import 'package:tunza_app/core/viewmodels/child_model.dart';
+import 'package:tunza_app/core/viewmodels/parent/child_model.dart';
 import 'package:tunza_app/ui/views/base_view.dart';
 
 class AddChildView extends StatelessWidget {

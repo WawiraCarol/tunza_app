@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tunza_app/core/models/child.dart';
-import 'package:tunza_app/core/viewmodels/singlechildmodel.dart';
+import 'package:tunza_app/core/viewmodels/parent/singlechildmodel.dart';
 import 'package:tunza_app/ui/views/base_view.dart';
 
 class SingleChildView extends StatelessWidget {

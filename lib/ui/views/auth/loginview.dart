@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tunza_app/core/enums/viewstate.dart';
-import 'package:tunza_app/core/viewmodels/login_model.dart';
+import 'package:tunza_app/core/viewmodels/auth/login_model.dart';
 import 'dart:convert';
 
 import 'package:tunza_app/ui/views/base_view.dart';

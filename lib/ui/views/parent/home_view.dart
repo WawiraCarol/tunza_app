@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tunza_app/core/enums/viewstate.dart';
-import 'package:tunza_app/core/viewmodels/home_model.dart';
+import 'package:tunza_app/core/viewmodels/parent/home_model.dart';
 import 'package:tunza_app/ui/views/base_view.dart';
-import 'manageregionalcategory.dart';
-import 'manageworkcategory.dart';
+
 
 class HomeView extends StatefulWidget{
 
@@ -25,8 +24,8 @@ class _HomeViewState extends State<HomeView>{
 
 
             actions: <Widget>[
-              IconButton(icon: Icon(Icons.search), onPressed: (){
-
+              IconButton(icon: Icon(Icons.perm_identity), onPressed: (){
+                Navigator.pushNamed(context ,"profile");
               })
 
             ],
@@ -36,57 +35,27 @@ class _HomeViewState extends State<HomeView>{
               children: <Widget>[
                 UserAccountsDrawerHeader(accountName: Text("Test"),decoration: BoxDecoration(image: DecorationImage(fit:BoxFit.cover,image: NetworkImage("https://www.unicef.org/jordan/sites/unicef.org.jordan/files/styles/hero_desktop/public/20181129_JOR_445.jpg?itok=759I5CEx"))), accountEmail: Text("test@tester.io"),currentAccountPicture: Text("P"),otherAccountsPictures: <Widget>[Text("C")],),
                 ListTile(
-                    title: Text('Dashboard'),
-                    trailing: Icon(Icons.child_friendly),
+                    title: Text('Children'),
+                    trailing: Icon(Icons.child_care),
                     onTap: (){
                       Navigator.of(context).pop();
                       Navigator.pushNamed(context ,"/");
                     }
                 ),
-                Divider(),
-                ListTile(
-                    title: Text('Profile'),
-                    trailing: Icon(Icons.work),
-                    onTap: (){
-                      Navigator.of(context).pop();
-                      Navigator.pushNamed(context ,"Admin profile");
-                    }
-                ),
-                Divider(),
-                ListTile(
-                    title: Text('Add Caretaker'),
-                    trailing: Icon(Icons.child_friendly),
-                    onTap: (){
-                      Navigator.of(context).pop();
-                      Navigator.pushNamed(context ,"Caretaker");
-                    }
-                ),
-                Divider(),
-                ListTile(
-                  title: Text('Add child'),
-                  trailing: Icon(Icons.child_care),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.pushNamed(context, "add_child");
-                  }
-                ),
 
                 Divider(),
                 ListTile(
-                  title: Text('Manage Regional Category'),
-                  trailing: Icon(Icons.local_post_office),
-                  onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new ManageRegionalCategory("Manage Regional Category"))),
-                ),
-                Divider(),
-                ListTile(
-                  title: Text('Manage Work Category'),
-                  trailing: Icon(Icons.business_center),
-                  onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new ManageWorkCategory("Manage Work Category"))),
+                  title: Text('Manage Categories'),
+                  trailing: Icon(Icons.list),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushNamed(context, "categories");
+                    }
                 ),
                 Divider(),
                 ListTile(
                     title: Text('Logout'),
-                    trailing: Icon(Icons.cancel),
+                    trailing: Icon(Icons.lock_open),
                     onTap: ()async{
                       var success= await model.logout();
                       if (success) {

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:tunza_app/core/models/caregiver.dart';
+import 'package:tunza_app/core/models/category.dart';
 import 'package:tunza_app/core/models/child.dart';
 import 'dart:async';
 
@@ -27,7 +29,7 @@ class Api{
     if(res.statusCode==201){
       return true;
     }else{
-      print(res.body);
+      //print(res.body);
       return false;
     }
   }
@@ -47,14 +49,88 @@ class Api{
     }
 
   }
-  Future<bool> deleteChild(id)async{
+  Future<bool> deleteChild(child_id)async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
-    var res = await client.post("$url/user/child/$id/delete",
+    var res = await client.post("$url/user/child/$child_id/delete",
         headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
     );
     if(res.statusCode==200){
       return true;
     }else{
+      return false;
+    }
+  }
+  Future<bool> addCategory(name)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/add_category",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"name":name}
+    );
+    if(res.statusCode==201){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+  Future<List<Category>> fetchCategories()async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/user/categories",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      List data=json.decode(res.body);
+      if(data.length>0) {
+        var categories = List.generate(data.length, (i) {
+          return Category.fromJson(data[i]);
+        });
+        return categories;
+      }else{
+        return [Category.empty()];
+      }
+    }else{
+      return [Category.empty()];
+    }
+  }
+  Future<List> fetchRawCategories()async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/user/categories",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      List data=json.decode(res.body);
+
+        return data;
+    }else{
+      return [];
+    }
+  }
+  //todo: fetch list of caregivers in a category and check children assigned to them
+  Future<List<Caregiver>> fetchCaregivers(child_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/user/child/$child_id/caregivers",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      List data=json.decode(res.body);
+      var caregivers=List.generate(data.length, (i){
+        return Caregiver.fromJson(data[i]);
+      });
+      return caregivers;
+    }else{
+      return [];
+    }
+  }
+  Future<bool> sendInvite(child_id,email_provided,int category_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/add_caregiver",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+      body: {"email_provided":email_provided,"category_id":category_id.toString()}
+    );
+    if(res.statusCode==201){
+      return true;
+    }else{
+      print(res.body);
       return false;
     }
   }
