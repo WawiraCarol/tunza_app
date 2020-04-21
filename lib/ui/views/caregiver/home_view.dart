@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:tunza_app/core/enums/viewstate.dart';
-import 'package:tunza_app/core/viewmodels/parent/home_model.dart';
+import 'package:tunza_app/core/viewmodels/caregiver/home_model.dart';
 import 'package:tunza_app/ui/views/base_view.dart';
+import 'package:tunza_app/ui/views/caregiver/childlist_view.dart';
 
 
-class HomeView extends StatefulWidget{
+class CaregiverHomeView extends StatefulWidget{
 
-  createState() => new _HomeViewState();
+  createState() => new _CaregiverHomeViewState();
 
 }
 
-class _HomeViewState extends State<HomeView>{
+class _CaregiverHomeViewState extends State<CaregiverHomeView>{
   @override
   Widget build(BuildContext context) {
-    return BaseView<HomeModel>(
+    return BaseView<CaregiverHomeModel>(
       onModelReady: (model)async {
         await model.fetchChildren();
       },
@@ -43,15 +44,15 @@ class _HomeViewState extends State<HomeView>{
                   ),
                   accountEmail: Text("test@tester.io"),
                   currentAccountPicture: CircleAvatar(
-                    child: Text("P",style: TextStyle(fontSize: 28),),
+                    child: Text("C",style: TextStyle(fontSize: 28),),
 
                   ),
-                  otherAccountsPictures: model.currentUser.user_role==2|| model.currentUser.user_role==3? [
+                  otherAccountsPictures: model.currentUser.user_role==1||model.currentUser.user_role==2|| model.currentUser.user_role==3? [
                     CircleAvatar(
                       child: FlatButton(
-                        child: Text("C",style: TextStyle(color: Colors.white),),
+                          child: Text("P",style: TextStyle(color: Colors.white),),
                         onPressed: (){
-                          Navigator.pushReplacementNamed(context, "caregiver_home");
+                            Navigator.pushReplacementNamed(context, "/");
                         },
                       ),
                     )
@@ -62,17 +63,26 @@ class _HomeViewState extends State<HomeView>{
                     trailing: Icon(Icons.child_care),
                     onTap: (){
                       Navigator.of(context).pop();
-                      Navigator.pushNamed(context ,"/");
+                      Navigator.pushNamed(context ,"caregiver_home");
                     }
                 ),
 
                 Divider(),
                 ListTile(
-                  title: Text('Manage Categories'),
-                  trailing: Icon(Icons.list),
+                  title: Text('Invites'),
+                  trailing: Icon(Icons.mail_outline),
                     onTap: () {
                       Navigator.of(context).pop();
-                      Navigator.pushNamed(context, "categories");
+                      Navigator.pushNamed(context, "view_invites");
+                    }
+                ),
+                Divider(),
+                ListTile(
+                    title: Text('Appointments'),
+                    trailing: Icon(Icons.access_time),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushNamed(context, "appointments");
                     }
                 ),
                 Divider(),
@@ -98,32 +108,12 @@ class _HomeViewState extends State<HomeView>{
           :RefreshIndicator(
             child: ListView.builder(itemCount:model.childList.length ,itemBuilder: (context,i){
 
-              return Card(
-                child: ListTile(
-                  leading: Icon(Icons.child_care),
-                  title: Text(model.childList[i].child_name),
-                  trailing: Icon(Icons.remove_red_eye, size: 10,),
-                  onLongPress: ()async{
-                    await model.deleteChild(model.childList[i].child_id);
-                  },
-                  onTap: (){
-                    Navigator.pushNamed(context, "child",arguments:model.childList[i]);
-                  },
-                ),
-              );
+              return ChildTile(model.childList[i]);
             }),
             onRefresh: ()async{
               await model.fetchChildren();
             },
           ),
-          floatingActionButton: model.state==ViewState.Idle?FloatingActionButton.extended(
-            icon: Icon(Icons.child_care),
-            label: Text("add"),
-            tooltip: "add child",
-            onPressed: (){
-              Navigator.pushNamed(context, "add_child");
-            },
-          ):null,
 
         );
       },

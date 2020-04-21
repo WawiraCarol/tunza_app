@@ -28,7 +28,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
     return BaseView<LoginModel>(
       onModelReady: (model)async{
         var hasUser=await model.isLoggedIn(context);
-        hasUser?Navigator.pushReplacementNamed(context, "/"):null;
+        hasUser?(model.currentuser.user_role>1?Navigator.pushReplacementNamed(context, "caregiver_home"):Navigator.pushReplacementNamed(context, "/")):null;
         _iconAnimationController = new AnimationController(
             vsync: this,
             duration: new Duration(milliseconds: 500)
@@ -108,7 +108,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                       formKey.currentState.save();
                                       var success=await model.login(_email, _password);
                                       if(success){
-                                        Navigator.pushReplacementNamed(context, "/");
+                                        model.currentuser.user_role>1?Navigator.pushReplacementNamed(context, "caregiver_home"):Navigator.pushReplacementNamed(context, "/");
                                       }
                                     }
 

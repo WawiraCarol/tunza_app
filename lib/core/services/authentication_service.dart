@@ -25,6 +25,7 @@ class AuthenticationService{
     if(fetchedUser!=null) {
       this.userController.add(fetchedUser);
       this.currentUser=fetchedUser;
+      print(fetchedUser.user_token);
     }
 
     return fetchedUser!=null;

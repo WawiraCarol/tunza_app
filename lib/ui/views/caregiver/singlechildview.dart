@@ -5,9 +5,9 @@ import 'package:tunza_app/core/models/child.dart';
 import 'package:tunza_app/core/viewmodels/parent/singlechildmodel.dart';
 import 'package:tunza_app/ui/views/base_view.dart';
 
-class SingleChildView extends StatelessWidget {
+class CaregiverSingleChildView extends StatelessWidget {
   Child child;
-  SingleChildView(this.child);
+  CaregiverSingleChildView(this.child);
   @override
   Widget build(BuildContext context) {
     return BaseView<SingleChildModel>(
@@ -20,7 +20,7 @@ class SingleChildView extends StatelessWidget {
             bottomNavigationBar: BottomNavigationBar(
               items: [
                 BottomNavigationBarItem(icon: Icon(Icons.receipt),title: Text("General")),
-                BottomNavigationBarItem(icon: Icon(Icons.child_friendly),title: Text("Caregivers")),
+//                BottomNavigationBarItem(icon: Icon(Icons.child_friendly),title: Text("Caregivers")),
                 BottomNavigationBarItem(icon: Icon(Icons.call),title:Text("Communication")),
               ],
               currentIndex: 0,
@@ -28,11 +28,11 @@ class SingleChildView extends StatelessWidget {
                 switch(i){
                   case 0:
                     break;
+//                  case 1:
+//                    Navigator.pushReplacementNamed(context, "caregivers",arguments: this.child);
+//                    break;
                   case 1:
-                    Navigator.pushReplacementNamed(context, "caregivers",arguments: this.child);
-                    break;
-                  case 2:
-                    Navigator.pushReplacementNamed(context, "communication",arguments: this.child);
+//                    Navigator.pushReplacementNamed(context, "communication",arguments: this.child);
                     break;
                 }
               },
@@ -50,7 +50,7 @@ class SingleChildView extends StatelessWidget {
                     title: Text("${model.infoList[i].topic.toUpperCase()}"),
                     subtitle: Text("${model.infoList[i].content.split('\n').map((s)=>"- $s").join('\n')}"),
                     onLongPress: (){
-                      //Todo: add edit and delete functionality
+                      //no edit functionality
                     },
                   ),
                 );
@@ -60,14 +60,6 @@ class SingleChildView extends StatelessWidget {
           await model.fetchChildInfo(this.child.child_id);
           },
           ),
-            floatingActionButton: model.state==ViewState.Idle?FloatingActionButton.extended(
-              icon: Icon(Icons.receipt),
-              label: Text("add"),
-              tooltip: "add info",
-              onPressed: (){
-                Navigator.pushNamed(context, "add_child_info",arguments: this.child);
-              },
-            ):null,
 
           );
         }

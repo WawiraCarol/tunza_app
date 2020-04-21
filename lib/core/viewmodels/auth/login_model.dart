@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tunza_app/core/enums/viewstate.dart';
+import 'package:tunza_app/core/models/user.dart';
 import 'package:tunza_app/core/services/authentication_service.dart';
 import 'package:tunza_app/core/viewmodels/base_model.dart';
 import 'package:tunza_app/locator.dart';
 
 class LoginModel extends BaseModel{
   AuthenticationService _authenticationService=locator<AuthenticationService>();
+  User get currentuser=>_authenticationService.currentUser;
   String errorMessage;
   bool _hasUser;
   Future<bool> login(String email,String password)async{

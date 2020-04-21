@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:tunza_app/core/models/caregiver.dart';
 import 'package:tunza_app/core/models/category.dart';
 import 'package:tunza_app/core/models/child.dart';
+import 'package:tunza_app/core/models/info.dart';
+import 'package:tunza_app/core/models/invite.dart';
 import 'dart:async';
 
 import 'package:tunza_app/core/models/user.dart';
@@ -132,6 +134,79 @@ class Api{
     }else{
       print(res.body);
       return false;
+    }
+  }
+
+  Future <List<Child>> fetchCaregiverChildren()async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/caregiver/children",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      List data=json.decode(res.body);
+      var children=List.generate(data.length, (i){
+        return Child.fromJson(data[i]);
+      });
+      return children;
+    }else{
+      return [];
+    }
+
+  }
+  Future<List<Invite>> fetchInvites()async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/caregiver/invites",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      List data=json.decode(res.body);
+      var invites=List.generate(data.length, (i){
+        return Invite.fromJson(data[i]);
+      });
+      return invites;
+    }else{
+      return [];
+    }
+  }
+  Future<bool> updateInvite(invite_id,stat)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/caregiver/invite/$invite_id/update",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"status":stat.toString()}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+  Future<bool> addChildInfo(child_id,topic,content,visibility)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/add_basicinfo",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"topic":topic,"content":content,"visibility":visibility.toString()}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+  Future<List<Info>> fetchChildInfo(child_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/user/child/$child_id/basicinfos",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      List data=json.decode(res.body);
+      var infos=List.generate(data.length, (i){
+        return Info.fromJson(data[i]);
+      });
+      return infos;
+    }else{
+      return [];
     }
   }
 }
