@@ -2,22 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tunza_app/core/enums/viewstate.dart';
 import 'package:tunza_app/core/viewmodels/auth/login_model.dart';
+import 'package:tunza_app/core/viewmodels/auth/register_model.dart';
 import 'dart:convert';
 
 import 'package:tunza_app/ui/views/base_view.dart';
 
 
-class LoginView extends StatefulWidget{
+class RegisterView extends StatefulWidget{
 
   @override
-  State<StatefulWidget> createState() => new _LoginViewState();
+  State<StatefulWidget> createState() => new _RegisterViewState();
 
 }
 
-class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMixin{
+class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin{
 
   final formKey = new GlobalKey<FormState>();
   String _email;
+  String _name;
+  String _phonenumber;
   String _password;
   AnimationController _iconAnimationController;
   Animation<double> _iconAnimation;
@@ -25,21 +28,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<LoginModel>(
-      onModelReady: (model)async{
-        var hasUser=await model.isLoggedIn(context);
-        hasUser?(model.currentuser.user_role>1?Navigator.pushReplacementNamed(context, "caregiver_home"):Navigator.pushReplacementNamed(context, "/")):null;
-        _iconAnimationController = new AnimationController(
-            vsync: this,
-            duration: new Duration(milliseconds: 500)
-        );
-
-        _iconAnimation = new CurvedAnimation(
-            parent: _iconAnimationController,
-            curve: Curves.easeOut);
-        _iconAnimation.addListener(()=> this.setState((){}));
-        _iconAnimationController.forward();
-      },
+    return BaseView<RegisterModel>(
       builder: (context,model,child){
         return Scaffold(
             backgroundColor: Colors.grey,
@@ -82,11 +71,27 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                               children: <Widget>[
                                 new TextFormField(
                                   decoration: new InputDecoration(
+                                    labelText: "Enter your name",
+
+                                  ),
+                                  onSaved: (value) => _name=value,
+                                  keyboardType: TextInputType.text,
+                                ),
+                                new TextFormField(
+                                  decoration: new InputDecoration(
                                     labelText: "Enter email address",
 
                                   ),
                                   onSaved: (value) => _email=value,
                                   keyboardType: TextInputType.emailAddress,
+                                ),
+                                new TextFormField(
+                                  decoration: new InputDecoration(
+                                    labelText: "Enter phone number",
+
+                                  ),
+                                  onSaved: (value) => _phonenumber=value,
+                                  keyboardType: TextInputType.phone,
                                 ),
                                 new TextFormField(
                                   decoration: new InputDecoration(
@@ -103,11 +108,11 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                 new MaterialButton(
                                   color: Colors.teal,
                                   textColor: Colors.white,
-                                  child: new Text('Login'),
+                                  child: new Text('Register'),
                                   onPressed:()async{
                                     if(formKey.currentState.validate()){
                                       formKey.currentState.save();
-                                      var success=await model.login(_email, _password);
+                                      var success=await model.register(_name,_email,_phonenumber, _password);
                                       if(success){
                                         model.currentuser.user_role>1?Navigator.pushReplacementNamed(context, "caregiver_home"):Navigator.pushReplacementNamed(context, "/");
                                       }
@@ -117,11 +122,10 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                 Divider(),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.pushNamed(context, "register");
+                                    Navigator.pop(context);
                                   },
-                                  child: new Text("joining us? click here to SIGN UP",style: TextStyle(fontSize: 14),),
+                                  child: new Text("member already? click to LOGIN",style: TextStyle(fontSize: 14),),
                                 )
-
                               ],
                             ),
                           ),

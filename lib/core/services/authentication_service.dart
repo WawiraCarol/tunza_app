@@ -20,6 +20,16 @@ class AuthenticationService{
     }
     return hasUser;
   }
+  Future<bool> register(name,String email,phonenumber, String password)async{
+    User fetchedUser=await _api.registerWithEmailAndPassword(name,email,phonenumber, password);
+    var hasUser = fetchedUser!=null;
+    if(hasUser){
+      await _myDatabase.storeLoggedUser(fetchedUser);
+      this.userController.add(fetchedUser);
+      this.currentUser=fetchedUser;
+    }
+    return hasUser;
+  }
   Future<bool> isLoggedIn() async {
     User fetchedUser=await _myDatabase.getLoggedInUser();
     if(fetchedUser!=null) {

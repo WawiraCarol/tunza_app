@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tunza_app/ui/views/auth/registerview.dart';
 import 'package:tunza_app/ui/views/caregiver/addcaretakerpage.dart';
 import 'package:tunza_app/ui/views/caregiver/appointment_view.dart';
 import 'package:tunza_app/ui/views/caregiver/home_view.dart';
@@ -25,6 +26,9 @@ class Router{
         break;
       case "login":
         return MaterialPageRoute(builder:(_)=>LoginView());
+        break;
+      case "register":
+        return MaterialPageRoute(builder:(_)=>RegisterView());
         break;
       case "profile":
         return MaterialPageRoute(builder:(_)=>ProfilePage("My profile"));

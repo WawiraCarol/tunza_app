@@ -22,6 +22,14 @@ class Api{
       return null;
     }
   }
+  Future<User> registerWithEmailAndPassword(name,String email,phonenumber,String password)async{
+    var res = await client.post("$url/register", body: {"name":name,"email":email,"phonenumber":phonenumber,"password":password});
+    if(res.statusCode==200){
+      return User.fromJson(json.decode(res.body));
+    } else {
+      return null;
+    }
+  }
   Future<bool> addChild(String name,String date_of_birth)async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
     var res = await client.post("$url/user/add_child",
