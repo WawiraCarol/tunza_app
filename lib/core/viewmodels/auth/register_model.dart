@@ -10,7 +10,7 @@ class RegisterModel extends BaseModel{
   User get currentuser=>_authenticationService.currentUser;
   String errorMessage;
 
-  Future<bool> register(name,String email,phonenumber,String password)async{
+  Future<bool> register(name,String email,phonenumber,String password,{avatar=null})async{
     setState(ViewState.Busy);
     if(name==null){
       errorMessage="Please enter your name";
@@ -32,7 +32,7 @@ class RegisterModel extends BaseModel{
       setState(ViewState.Idle);
       return false;
     }
-    var success = await _authenticationService.register(name,email,phonenumber, password);
+    var success = await _authenticationService.register(name,email,phonenumber, password,avatar:avatar);
     if(!success){
       errorMessage="There is a problem with your email and password";
       setState(ViewState.Idle);

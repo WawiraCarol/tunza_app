@@ -20,8 +20,8 @@ class AuthenticationService{
     }
     return hasUser;
   }
-  Future<bool> register(name,String email,phonenumber, String password)async{
-    User fetchedUser=await _api.registerWithEmailAndPassword(name,email,phonenumber, password);
+  Future<bool> register(name,String email,phonenumber, String password,{avatar})async{
+    User fetchedUser=await _api.registerWithEmailAndPassword(name,email,phonenumber, password,avatar: avatar);
     var hasUser = fetchedUser!=null;
     if(hasUser){
       await _myDatabase.storeLoggedUser(fetchedUser);

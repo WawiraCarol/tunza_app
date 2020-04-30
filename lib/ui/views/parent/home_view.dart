@@ -26,7 +26,8 @@ class _HomeViewState extends State<HomeView>{
             actions: <Widget>[
               IconButton(icon: Icon(Icons.perm_identity), onPressed: (){
                 Navigator.pushNamed(context ,"profile");
-              })
+              }),
+
 
             ],
           ),
@@ -96,12 +97,16 @@ class _HomeViewState extends State<HomeView>{
             child: CircularProgressIndicator(),
           )
           :RefreshIndicator(
-            child: ListView.builder(itemCount:model.childList.length ,itemBuilder: (context,i){
+            child: model.childList.length>0?
+            ListView.builder(itemCount:model.childList.length ,itemBuilder: (context,i){
 
               return Card(
                 child: ListTile(
-                  leading: Icon(Icons.child_care),
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQOL0wCKxBI3i8-S8OnckAeaszWpVHziXKSnzBRNuABcKZw66M-&usqp=CAU"),
+                  ),
                   title: Text(model.childList[i].child_name),
+                  subtitle: Text(model.childList[i].child_date_of_birth),
                   trailing: Icon(Icons.remove_red_eye, size: 10,),
                   onLongPress: ()async{
                     await model.deleteChild(model.childList[i].child_id);
@@ -111,7 +116,28 @@ class _HomeViewState extends State<HomeView>{
                   },
                 ),
               );
-            }),
+            }):
+            Container(
+              padding: EdgeInsets.fromLTRB(4, 0, 4, 2),
+              child: Column(
+              children: <Widget>[
+                Text(
+                  "Welcome to tunza app.",
+                  style: TextStyle(
+                      fontSize: 16
+                  ),
+                ),
+                Text(
+                  "- You can add your child on the system by clicking on the floating \"add\" button.\n "+
+                      "- If you do not see your child's name on this page after adding them, pull down on the page to refresh the list.\n"+
+                      "- To view and add more information about your child or assign a caregiver, click on the card with your child's name on  the list.",
+                  style: TextStyle(
+                      fontSize: 14
+                  ),
+                )
+              ],
+              ),
+            ),
             onRefresh: ()async{
               await model.fetchChildren();
             },

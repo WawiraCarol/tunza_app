@@ -52,16 +52,61 @@ class CaregiverView extends StatelessWidget{
                 :RefreshIndicator(
               child: ListView.builder(itemCount:model.caregiverList.length ,itemBuilder: (context,i){
 
-                return ListTile(
-                  leading: Icon(Icons.child_friendly),
-                  title: Text(model.caregiverList[i].email_provided),
-                  subtitle: Text(model.caregiverList[i].status?"invite accepted":"invite pending"),
-                  onLongPress: (){
-                    //todo: allow deletion of care givers
-                  },
-                  onTap: (){
-                    //todo: View more details on caregiver
-                  },
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: GestureDetector(
+                        child: CircleAvatar(backgroundImage: NetworkImage("https://i.ya-webdesign.com/images/customer-vector-engagement-18.png")),
+                        onTap: (){
+                          return showDialog(
+                              context: context,
+
+                              builder: (context){
+                                return AlertDialog(
+                                  contentPadding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                  titlePadding: EdgeInsets.fromLTRB(24, 12, 24, 12),
+                                  title: Text(model.caregiverList[i].email_provided),
+
+                                  content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children:[
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(24, 0, 24, 20),
+                                          child: Image.network("https://i.ya-webdesign.com/images/customer-vector-engagement-18.png"),
+                                        ),
+                                        Container(
+                                          color: Colors.blueGrey,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              IconButton(icon: Icon(Icons.phone),),
+                                              IconButton(icon: Icon(Icons.video_call),),
+                                              IconButton(icon: Icon(Icons.chat),),
+                                              IconButton(icon: Icon(Icons.perm_identity),)
+                                            ],
+                                          ),
+                                        )
+                                      ]
+                                  ),
+
+                                );
+                              }
+                          );
+
+                        },
+                      ),
+                      title: Text(model.caregiverList[i].email_provided),
+                      subtitle: Text(model.caregiverList[i].status?"invite accepted":"invite pending"),
+                      onLongPress: (){
+                        //todo: allow deletion of care givers
+                      },
+                      onTap: (){
+                        //todo: View more details on caregiver
+                      },
+                    ),
+                    Divider()
+                  ],
                 );
               }),
               onRefresh: ()async{

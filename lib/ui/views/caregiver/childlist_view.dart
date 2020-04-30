@@ -11,7 +11,7 @@ class ChildTile extends StatelessWidget{
     return Card(
         child: ListTile(
           leading: CircleAvatar(
-            child: new Text(child.child_name[0].toUpperCase()),
+            backgroundImage: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQOL0wCKxBI3i8-S8OnckAeaszWpVHziXKSnzBRNuABcKZw66M-&usqp=CAU"),
             radius: 24,
           ),
           title: Text(child.child_name,style: TextStyle(fontSize: 16.0),),

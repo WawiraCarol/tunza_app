@@ -32,6 +32,7 @@ class AddChildInfoView extends StatelessWidget{
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.title),
                         labelText: 'Topic',
+                        hintText: "e.g Hobbies, Likes, dislikes, abilities, allergies",
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
@@ -51,6 +52,7 @@ class AddChildInfoView extends StatelessWidget{
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.receipt),
                         labelText: 'Content',
+                        hintText: "e.g drawing, singing, cannot talk, pollen allergy e.t.c",
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
