@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:tunza_app/core/enums/viewstate.dart';
 import 'package:tunza_app/core/viewmodels/caregiver/home_model.dart';
 import 'package:tunza_app/ui/views/base_view.dart';
 import 'package:tunza_app/ui/views/caregiver/childlist_view.dart';
+
 
 
 class CaregiverHomeView extends StatefulWidget{
@@ -25,9 +27,16 @@ class _CaregiverHomeViewState extends State<CaregiverHomeView>{
 
 
             actions: <Widget>[
-              IconButton(icon: Icon(Icons.perm_identity), onPressed: (){
-                Navigator.pushNamed(context ,"profile");
-              })
+              IconButton(icon: Icon(Icons.search), onPressed: 
+                
+                () {
+          showSearch(context: context, delegate: AppSearch());
+          }
+            
+
+              )
+              
+              
 
             ],
           ),
@@ -138,6 +147,91 @@ class _CaregiverHomeViewState extends State<CaregiverHomeView>{
 
         );
       },
+    );
+  }
+
+}
+class AppSearch extends SearchDelegate<String>{
+
+final cities = [
+"Otse",
+"Kanye",
+"Lobatse",
+"Ramotswa",
+"Zilapo"
+];
+ final recentCities =[
+  "Otse",
+ "Kanye" 
+ ];
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    //what kind of actions do i want to perform
+
+    return [IconButton(
+      icon: Icon(Icons.clear), 
+      onPressed: () {
+            query="";
+      }
+      )
+    ];
+  }
+  
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // leading icon on the left of the app bar
+    return IconButton(icon: AnimatedIcon(
+      icon: AnimatedIcons.menu_arrow, 
+      progress: transitionAnimation,
+      ),
+      onPressed: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => CaregiverHomeView())
+      
+      ));
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    return Center(
+      child: Container(
+        height: 100.0,
+        width: 100.0,
+        child: Card(
+          color: Colors.red,
+          child: Center(
+            child: Text(query),
+          )
+        ),
+      )
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // give suggestions whan someone searches something
+    final suggestionList = query.isEmpty ? recentCities : cities.where((p)=>p.startsWith(query)).toList();
+    return ListView.builder(
+      itemBuilder:(context, index) => ListTile(
+        onTap: (){
+          showResults(context);
+        },
+        leading: Icon(Icons.location_city),
+        title: RichText(
+          text: TextSpan(
+            text: suggestionList[index].substring(0, query.length),
+            style: TextStyle(
+              color: Colors.black,fontWeight: FontWeight.bold
+            ),
+            children: [TextSpan(
+              text: suggestionList[index].substring(query.length),
+              style: TextStyle(color: Colors.grey)
+            )]
+          )
+        ),
+        ),
+        itemCount: suggestionList.length,
     );
   }
 
