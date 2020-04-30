@@ -119,7 +119,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                   onTap: () {
                                     Navigator.pushNamed(context, "register");
                                   },
-                                  child: new Text("joining us? click here to SIGN UP",style: TextStyle(fontSize: 14),),
+                                  child: new Text("joining us? click here to SIGN UP",style: TextStyle(fontSize: 14,decoration: TextDecoration.underline),),
                                 )
 
                               ],

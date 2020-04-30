@@ -1,19 +1,24 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:tunza_app/core/models/caregiver.dart';
 import 'package:tunza_app/core/models/category.dart';
 import 'package:tunza_app/core/models/child.dart';
 import 'package:tunza_app/core/models/info.dart';
 import 'package:tunza_app/core/models/invite.dart';
+import 'package:tunza_app/core/models/profile.dart';
 import 'dart:async';
+import 'dart:io';
 
 import 'package:tunza_app/core/models/user.dart';
 import 'package:tunza_app/core/services/authentication_service.dart';
 import 'package:tunza_app/locator.dart';
+import 'package:tunza_app/res/strings.dart';
 class Api{
 
-  static const url= "http://35.226.249.253/api";
+  static const url= StringConstants.api_url;
   var client = http.Client();
+  Dio dio= new Dio();
   Future<User> loginWithEmailAndPassword(String email,String password)async{
     var res = await client.post("$url/login", body: {"email":email,"password":password});
     if(res.statusCode==200){
@@ -22,10 +27,26 @@ class Api{
       return null;
     }
   }
-  Future<User> registerWithEmailAndPassword(name,String email,phonenumber,String password)async{
-    var res = await client.post("$url/register", body: {"name":name,"email":email,"phonenumber":phonenumber,"password":password});
+  Future<User> registerWithEmailAndPassword(name,String email,phonenumber,String password,{File avatar})async{
+    FormData formData=new FormData.fromMap({
+      "name":name,
+      "email":email,
+      "phonenumber":phonenumber,
+      "password":password,
+      "avatar":await MultipartFile.fromFile(avatar.path,filename: avatar.path.split('/').last)
+    });
+    var res = await dio.post("$url/register", data:formData );
     if(res.statusCode==200){
-      return User.fromJson(json.decode(res.body));
+      return User.fromJson(res.data);
+    } else {
+      return null;
+    }
+  }
+  Future<Profile> getUserProfile()async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/user",headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"});
+    if(res.statusCode==200){
+      return Profile.fromJson(json.decode(res.body));
     } else {
       return null;
     }

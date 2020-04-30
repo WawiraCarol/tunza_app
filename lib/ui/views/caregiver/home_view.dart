@@ -115,10 +115,31 @@ class _CaregiverHomeViewState extends State<CaregiverHomeView>{
             child: CircularProgressIndicator(),
           )
           :RefreshIndicator(
-            child: ListView.builder(itemCount:model.childList.length ,itemBuilder: (context,i){
+            child: model.childList.length>0?ListView.builder(itemCount:model.childList.length ,itemBuilder: (context,i){
 
               return ChildTile(model.childList[i]);
-            }),
+            }):Container(
+              padding: EdgeInsets.fromLTRB(4, 0, 4, 2),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "Welcome to tunza app.",
+                    style: TextStyle(
+                        fontSize: 16
+                    ),
+                  ),
+                  Text(
+                    "- To view and accept the invites, click on the side menu and go to the \"invites\" menu option."+
+                        "- After you accept an invite, you can return to this page to view the child's information."+
+                        "- If you still can't see the child's name on the list after accepting an invite, pull down on the page to refresh."
+                        +"You can click on the child's name in the list to view more information about them.",
+                    style: TextStyle(
+                        fontSize: 14
+                    ),
+                  )
+                ],
+              ),
+            ),
             onRefresh: ()async{
               await model.fetchChildren();
             },
