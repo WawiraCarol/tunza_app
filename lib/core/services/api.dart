@@ -70,8 +70,9 @@ class Api{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
     var res = await client.post("$url/user/call",
         headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
-        body:{"call_url":call_url,"receiver_if":receiver_id.toString(),"call_type":call_type}
+        body:{"call_url":call_url,"receiver_id":receiver_id.toString(),"call_type":call_type}
     );
+    print(res.body);
     if(res.statusCode!=500){
       return true;
     }else{
@@ -158,6 +159,7 @@ class Api{
     var res = await client.get("$url/user/child/$child_id/caregivers",
         headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
     );
+    print(res.body);
     if(res.statusCode==200){
       List data=json.decode(res.body);
       var caregivers=List.generate(data.length, (i){

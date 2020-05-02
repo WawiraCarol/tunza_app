@@ -86,10 +86,11 @@ class CaregiverView extends StatelessWidget{
                                           children: <Widget>[
                                             IconButton(icon: Icon(Icons.phone),
                                             onPressed: ()async{
-                                              if(model.caregiverList[i].caregiver_id!=null) {
+                                              if(model.caregiverList[i].caregiver_user_id!=null) {
+                                                print(model.caregiverList[i].caregiver_user_id);
                                                 await model.makeCall(
                                                     "voice call url",
-                                                    model.caregiverList[i].caregiver_id,
+                                                    model.caregiverList[i].caregiver_user_id,
                                                     "voice");
                                                 // todo: add navigation to call page
                                               }
@@ -97,10 +98,10 @@ class CaregiverView extends StatelessWidget{
                                             ),
                                             IconButton(icon: Icon(Icons.video_call),
                                               onPressed: ()async{
-                                                if(model.caregiverList[i].caregiver_id!=null) {
+                                                if(model.caregiverList[i].caregiver_user_id!=null) {
                                                   await model.makeCall(
                                                       "video call url",
-                                                      model.caregiverList[i].caregiver_id,
+                                                      model.caregiverList[i].caregiver_user_id,
                                                       "video");
                                                 }
                                               },),

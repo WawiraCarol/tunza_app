@@ -56,7 +56,7 @@ class _HomeViewState extends State<HomeView>{
                           image: NetworkImage("https://www.unicef.org/jordan/sites/unicef.org.jordan/files/styles/hero_desktop/public/20181129_JOR_445.jpg?itok=759I5CEx")
                       )
                   ),
-                  accountEmail: Text("test@tester.io"),
+                  accountEmail: Text("Profile"),
                   currentAccountPicture: CircleAvatar(
                     child: Text("P",style: TextStyle(fontSize: 28),),
 
