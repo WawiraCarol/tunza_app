@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:tunza_app/core/enums/viewstate.dart';
 import 'package:tunza_app/core/models/user.dart';
 import 'package:tunza_app/core/services/authentication_service.dart';
+import 'package:tunza_app/core/services/socket_service.dart';
 import 'package:tunza_app/core/viewmodels/base_model.dart';
 import 'package:tunza_app/locator.dart';
 
 class LoginModel extends BaseModel{
   AuthenticationService _authenticationService=locator<AuthenticationService>();
+  SocketService _socketService=locator<SocketService>();
   User get currentuser=>_authenticationService.currentUser;
   String errorMessage;
   bool _hasUser;
@@ -38,5 +40,14 @@ class LoginModel extends BaseModel{
     if(!success){setState(ViewState.Idle);}
     return success;
 
+  }
+  listenForCall()async{
+    setState(ViewState.Busy);
+    await _socketService.disconnectFromPusher();
+    await _socketService.initPusher();
+    await _socketService.connectToPusher();
+    await _socketService.subscribeToUserChannel();
+    await _socketService.bindCallMade();
+    setState(ViewState.Idle);
   }
 }

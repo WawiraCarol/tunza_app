@@ -21,6 +21,7 @@ class Api{
   Dio dio= new Dio();
   Future<User> loginWithEmailAndPassword(String email,String password)async{
     var res = await client.post("$url/login", body: {"email":email,"password":password});
+    print(res.body);
     if(res.statusCode==200){
       return User.fromJson(json.decode(res.body));
     } else {
@@ -45,6 +46,7 @@ class Api{
   Future<Profile> getUserProfile()async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
     var res = await client.get("$url/user",headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"});
+    print(res.body);
     if(res.statusCode==200){
       return Profile.fromJson(json.decode(res.body));
     } else {
@@ -64,12 +66,26 @@ class Api{
       return false;
     }
   }
+  Future<bool> makeCall(String call_url,int receiver_id,String call_type)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/call",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body:{"call_url":call_url,"receiver_if":receiver_id.toString(),"call_type":call_type}
+    );
+    if(res.statusCode!=500){
+      return true;
+    }else{
+      //print(res.body);
+      return false;
+    }
+  }
   Future <List<Child>> fetchChildren()async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
     var res = await client.get("$url/user/children",
         headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
     );
     if(res.statusCode==200){
+
       List data=json.decode(res.body);
       var children=List.generate(data.length, (i){
         return Child.fromJson(data[i]);

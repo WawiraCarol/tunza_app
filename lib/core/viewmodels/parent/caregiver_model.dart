@@ -12,4 +12,9 @@ class CaregiverModel extends BaseModel{
     caregiverList= await _api.fetchCaregivers(child_id);
     setState(ViewState.Idle);
   }
+  makeCall(call_url,receiver_id,call_type)async{
+    setState(ViewState.Idle);
+    await _api.makeCall(call_url, receiver_id, call_type);
+    setState(ViewState.Idle);
+  }
 }
