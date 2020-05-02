@@ -70,8 +70,9 @@ class SocketService{
   }
   bindCallMade()async{
     await userChannel.bind("App\\Events\\CallMade", (x){
-      var call=json.decode(x.data);
+      var call=json.decode(x.data)["call"];
       callController.add(Call.fromJson(call));
+      print(call);
       _notificationService.showNotification(call["id"], call['call_type'], call['call_type'], call['call_url']);
     });
   }

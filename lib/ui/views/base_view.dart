@@ -51,7 +51,7 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>>{
               child: Text('Ok'),
               onPressed: () async {
                 Navigator.of(context, rootNavigator: true).pop();
-                await Navigator.pushNamed(context, "profile");
+                await Navigator.pushNamed(context, "profile");//todo: replace this with call page
               },
             )
           ],
@@ -63,7 +63,7 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>>{
   void _configureSelectNotificationSubject() {
 
     asns= model.notificationService.selectNotificationSubject.stream.listen((String payload) async {
-      await Navigator.pushNamed(context, "profile");;
+      await Navigator.pushNamed(context, "profile");//todo: replace this with call page
     });
   }
   @override

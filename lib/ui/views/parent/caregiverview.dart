@@ -91,6 +91,7 @@ class CaregiverView extends StatelessWidget{
                                                     "voice call url",
                                                     model.caregiverList[i].caregiver_id,
                                                     "voice");
+                                                // todo: add navigation to call page
                                               }
                                             },
                                             ),
