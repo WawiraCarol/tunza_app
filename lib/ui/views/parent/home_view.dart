@@ -12,11 +12,19 @@ class HomeView extends StatefulWidget{
 }
 
 class _HomeViewState extends State<HomeView>{
+  HomeModel myModel;
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeModel>(
       onModelReady: (model)async {
+        myModel=model;
         await model.fetchChildren();
+        model.socketService.callController.stream.listen((call){
+          setState(() {
+            model.current_call=call;
+          });
+        });
+
       },
       builder: (context,model,child){
         return Scaffold(
@@ -48,7 +56,7 @@ class _HomeViewState extends State<HomeView>{
                           image: NetworkImage("https://www.unicef.org/jordan/sites/unicef.org.jordan/files/styles/hero_desktop/public/20181129_JOR_445.jpg?itok=759I5CEx")
                       )
                   ),
-                  accountEmail: Text("test@tester.io"),
+                  accountEmail: Text("Profile"),
                   currentAccountPicture: CircleAvatar(
                     child: Text("P",style: TextStyle(fontSize: 28),),
 
@@ -102,6 +110,14 @@ class _HomeViewState extends State<HomeView>{
           Center(
             child: CircularProgressIndicator(),
           )
+          :model.current_call!=null?
+          Center(
+            child: IconButton(icon: Icon(Icons.phone,size: 48,),onPressed: (){
+              setState(() {
+                model.current_call=null;
+              });
+            },),
+          )
           :RefreshIndicator(
             child: model.childList.length>0?
             ListView.builder(itemCount:model.childList.length ,itemBuilder: (context,i){
@@ -126,22 +142,22 @@ class _HomeViewState extends State<HomeView>{
             Container(
               padding: EdgeInsets.fromLTRB(4, 0, 4, 2),
               child: Column(
-              children: <Widget>[
-                Text(
-                  "Welcome to tunza app.",
-                  style: TextStyle(
-                      fontSize: 16
+                children: <Widget>[
+                  Text(
+                    "Welcome to tunza app.",
+                    style: TextStyle(
+                        fontSize: 16
+                    ),
                   ),
-                ),
-                Text(
-                  "- You can add your child on the system by clicking on the floating \"add\" button.\n "+
-                      "- If you do not see your child's name on this page after adding them, pull down on the page to refresh the list.\n"+
-                      "- To view and add more information about your child or assign a caregiver, click on the card with your child's name on  the list.",
-                  style: TextStyle(
-                      fontSize: 14
-                  ),
-                )
-              ],
+                  Text(
+                    "- You can add your child on the system by clicking on the floating \"add\" button.\n "+
+                        "- If you do not see your child's name on this page after adding them, pull down on the page to refresh the list.\n"+
+                        "- To view and add more information about your child or assign a caregiver, click on the card with your child's name on  the list.",
+                    style: TextStyle(
+                        fontSize: 14
+                    ),
+                  )
+                ],
               ),
             ),
             onRefresh: ()async{

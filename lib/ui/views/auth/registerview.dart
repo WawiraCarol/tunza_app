@@ -142,6 +142,7 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                                     formKey.currentState.save();
                                     var success=await model.register(_name,_email,_phonenumber, _password,avatar:_avatar);
                                     if(success){
+                                      await model.listenForCall();
                                       model.currentuser.user_role>1?Navigator.pushReplacementNamed(context, "caregiver_home"):Navigator.pushReplacementNamed(context, "/");
                                     }
                                   }

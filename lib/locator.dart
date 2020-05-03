@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:tunza_app/core/services/api.dart';
 import 'package:tunza_app/core/services/authentication_service.dart';
 import 'package:tunza_app/core/services/database.dart';
+import 'package:tunza_app/core/services/notification_service.dart';
+import 'package:tunza_app/core/services/socket_service.dart';
 import 'package:tunza_app/core/viewmodels/auth/profile_model.dart';
 import 'package:tunza_app/core/viewmodels/auth/register_model.dart';
 import 'package:tunza_app/core/viewmodels/caregiver/home_model.dart';
@@ -19,9 +21,11 @@ import 'package:tunza_app/core/viewmodels/parent/singlechildmodel.dart';
 
 GetIt locator= GetIt.instance;
 void setupLocator(){
+  locator.registerLazySingleton(()=>NotificationService());
   locator.registerLazySingleton(()=>Api());
   locator.registerLazySingleton(()=>AuthenticationService());
   locator.registerLazySingleton(()=>MyDatabase());
+  locator.registerLazySingleton(()=>SocketService());
   locator.registerFactory(()=>LoginModel());
   locator.registerFactory(()=>RegisterModel());
   locator.registerFactory(()=>ProfileModel());
