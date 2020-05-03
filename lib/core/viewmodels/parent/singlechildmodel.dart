@@ -12,4 +12,11 @@ class SingleChildModel extends BaseModel{
     infoList=await _api.fetchChildInfo(child_id);
     setState(ViewState.Idle);
   }
+  deleteChildinfo(info_id,child_id)async{
+    setState(ViewState.Busy);
+    var success = await _api.deleteChildInfo(info_id, child_id);
+    await fetchChildInfo(child_id);
+    setState(ViewState.Idle);
+    return success;
+  }
 }

@@ -12,6 +12,7 @@ import 'package:tunza_app/ui/views/parent/addchildview.dart';
 import 'package:tunza_app/ui/views/parent/caregiverview.dart';
 import 'package:tunza_app/ui/views/parent/categoryview.dart';
 import 'package:tunza_app/ui/views/parent/communicationview.dart';
+import 'package:tunza_app/ui/views/parent/addpost_view.dart';
 import 'package:tunza_app/ui/views/parent/home_view.dart';
 import 'package:tunza_app/ui/views/parent/invitecaretakerview.dart';
 import 'package:tunza_app/ui/views/auth/loginview.dart';
@@ -54,6 +55,9 @@ class Router{
       case "communication":
         return MaterialPageRoute(builder: (_)=>CommunicationView(settings.arguments));
         break;
+      case "add_post":
+        return MaterialPageRoute(builder: (_)=>AddPostView(settings.arguments));
+        break;
       case "caregiver_home":
         return MaterialPageRoute(builder:(_)=>CaregiverHomeView());
         break;
@@ -66,9 +70,13 @@ class Router{
       case "add_child_info":
         return MaterialPageRoute(builder: (_)=>AddChildInfoView(settings.arguments));
         break;
+      case "edit_child_info":
+        return MaterialPageRoute(builder: (_)=>AddChildInfoView(settings.arguments));
+        break;
       case "caregiver_child_view":
         return MaterialPageRoute(builder: (_)=>CaregiverSingleChildView(settings.arguments));
         break;
+
     }
   }
 }

@@ -3,18 +3,17 @@ import 'package:tunza_app/core/services/api.dart';
 import 'package:tunza_app/core/viewmodels/base_model.dart';
 import 'package:tunza_app/locator.dart';
 
-class AddChildInfoModel extends BaseModel{
+class AddCommentModel extends BaseModel{
   Api _api=locator<Api>();
-  saveChildInfo(child_id,topic,content,visibility)async{
+  addComment(topic_id,child_id,topic)async{
     setState(ViewState.Busy);
-    var success =await _api.addChildInfo(child_id, topic, content, visibility);
+    var success = await _api.addComment(topic_id,child_id, topic);
     setState(ViewState.Idle);
     return success;
   }
-  Future<bool> updateChildInfo(info_id,child_id,topic,content,visibility)async{
+  editComment(comment_id,topic_id,child_id,topic)async{
     setState(ViewState.Busy);
-    var success =await _api.editChildInfo(info_id,child_id, topic, content, visibility);
+    var success= await _api.editComment(comment_id,topic_id, child_id, topic);
     setState(ViewState.Idle);
-    return success;
   }
 }

@@ -23,7 +23,7 @@ class CaregiverView extends StatelessWidget{
               items: [
                 BottomNavigationBarItem(icon: Icon(Icons.receipt),title: Text("General")),
                 BottomNavigationBarItem(icon: Icon(Icons.child_friendly),title: Text("Caregivers")),
-                BottomNavigationBarItem(icon: Icon(Icons.call),title:Text("Communication")),
+                BottomNavigationBarItem(icon: Icon(Icons.content_paste),title:Text("Posts")),
               ],
               currentIndex: 1,
               onTap: (i){
