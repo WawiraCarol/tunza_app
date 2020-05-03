@@ -11,6 +11,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:tunza_app/core/models/user.dart';
+import 'package:tunza_app/core/models/post.dart';
+import 'package:tunza_app/core/models/comment.dart';
 import 'package:tunza_app/core/services/authentication_service.dart';
 import 'package:tunza_app/locator.dart';
 import 'package:tunza_app/res/strings.dart';
@@ -58,7 +60,7 @@ class Api{
     var res = await client.post("$url/user/add_child",
         headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
         body:{"name":name,"date_of_birth":date_of_birth}
-        );
+    );
     if(res.statusCode==201){
       return true;
     }else{
@@ -66,20 +68,20 @@ class Api{
       return false;
     }
   }
-  Future<bool> makeCall(String call_url,int receiver_id,String call_type)async{
+  Future<bool> editChild(int id,String name,String date_of_birth)async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
-    var res = await client.post("$url/user/call",
+    var res = await client.post("$url/user/child/$id/update",
         headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
-        body:{"call_url":call_url,"receiver_id":receiver_id.toString(),"call_type":call_type}
+        body:{"name":name,"date_of_birth":date_of_birth}
     );
-    print(res.body);
-    if(res.statusCode!=500){
+    if(res.statusCode==200){
       return true;
     }else{
       //print(res.body);
       return false;
     }
   }
+
   Future <List<Child>> fetchChildren()async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
     var res = await client.get("$url/user/children",
@@ -121,6 +123,20 @@ class Api{
       return false;
     }
   }
+  Future<bool> editCategory(int id,name)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/category/$id/update",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"name":name}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+
   Future<List<Category>> fetchCategories()async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
     var res = await client.get("$url/user/categories",
@@ -153,6 +169,18 @@ class Api{
       return [];
     }
   }
+  Future<bool> deleteCategory(int id,name)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/category/$id/delete",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
   //todo: fetch list of caregivers in a category and check children assigned to them
   Future<List<Caregiver>> fetchCaregivers(child_id)async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
@@ -179,7 +207,19 @@ class Api{
     if(res.statusCode==201){
       return true;
     }else{
-      print(res.body);
+//      print(res.body);
+      return false;
+    }
+  }
+  Future<bool> deleteInvite(child_id,caregiver_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/caregiver/$caregiver_id/delete",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+//      print(res.body);
       return false;
     }
   }
@@ -241,6 +281,19 @@ class Api{
       return false;
     }
   }
+  Future<bool> editChildInfo(info_id,child_id,topic,content,visibility)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/basicinfo/$info_id/update",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"topic":topic,"content":content,"visibility":visibility.toString()}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
   Future<List<Info>> fetchChildInfo(child_id)async{
     AuthenticationService _authenticationService=locator<AuthenticationService>();
     var res = await client.get("$url/user/child/$child_id/basicinfos",
@@ -254,6 +307,141 @@ class Api{
       return infos;
     }else{
       return [];
+    }
+  }
+  Future<bool> deleteChildInfo(info_id,child_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/basicinfo/$info_id/delete",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+
+  Future<bool> makeCall(String call_url,int receiver_id,String call_type)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/call",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body:{"call_url":call_url,"receiver_id":receiver_id.toString(),"call_type":call_type}
+    );
+    print(res.body);
+    if(res.statusCode!=500){
+      return true;
+    }else{
+      //print(res.body);
+      return false;
+    }
+  }
+  Future<bool> addPost(child_id,topic)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/add_topic",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"topic":topic}
+    );
+    if(res.statusCode==201){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+  Future<bool> editPost(topic_id,child_id,topic)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/topic/$topic_id/update",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"topic":topic}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+  Future<List<Post>> fetchPosts(child_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/user/child/$child_id/topics",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    print(res.body);
+    if(res.statusCode==200){
+      List data=json.decode(res.body);
+      var posts=List.generate(data.length, (i){
+        return Post.fromJson(data[i]);
+      });
+      return posts;
+    }else{
+      return [];
+    }
+  }
+  Future<bool> deletePost(topic_id,child_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/topic/$topic_id/delete",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+  Future<bool> addComment(child_id,topic_id,comment)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/topic/$topic_id/add_comment",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"comment":comment}
+    );
+    if(res.statusCode==201){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+  Future<bool> editComment(comment_id,topic_id,child_id,comment)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/topic/$topic_id/comment/$comment_id/update",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"},
+        body: {"comment":comment}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
+    }
+  }
+  Future<List<Comment>> fetchComments(topic_id,child_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.get("$url/user/child/$child_id/topic/$topic_id/comments",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    print(res.body);
+    if(res.statusCode==200){
+      List data=json.decode(res.body);
+      var comments=List.generate(data.length, (i){
+        return Comment.fromJson(data[i]);
+      });
+      return comments;
+    }else{
+      return [];
+    }
+  }
+  Future<bool> deleteComment(comment_id,topic_id,child_id)async{
+    AuthenticationService _authenticationService=locator<AuthenticationService>();
+    var res = await client.post("$url/user/child/$child_id/topic/$topic_id/comment/$comment_id/delete",
+        headers: {"Authorization":"Bearer ${_authenticationService.currentUser.user_token}"}
+    );
+    if(res.statusCode==200){
+      return true;
+    }else{
+      print(res.body);
+      return false;
     }
   }
 }

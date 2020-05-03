@@ -6,7 +6,7 @@ class Call{
   Call.fromJson(map){
     this.call_url=map["call_url"];
     this.caller_id=map["caller_id"];
-    this.receiver_id=map["receiver_id"];
+    this.receiver_id=map["receiver_id"].toString();
     this.call_type=map["call_type"];
 
   }

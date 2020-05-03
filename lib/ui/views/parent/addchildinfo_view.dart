@@ -1,17 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tunza_app/core/models/child.dart';
+import 'package:tunza_app/core/models/info.dart';
 import 'package:tunza_app/core/viewmodels/parent/addchildinfo_model.dart';
 import 'package:tunza_app/ui/views/base_view.dart';
 
 class AddChildInfoView extends StatelessWidget{
   Child child;
+  Info info;
   var _formKey=GlobalKey<FormState>();
   var _topic;
   var _content;
   var _visibility = true;
   var _visibility_val = 1;
-  AddChildInfoView(this.child);
+  AddChildInfoView(args){
+    this.child=args[0];
+    this.info=args.length>1?args[1]:null;
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -29,6 +34,7 @@ class AddChildInfoView extends StatelessWidget{
                 child: Column(
                   children: [
                     TextFormField(
+                      initialValue: this.info!=null?this.info.topic:null,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.title),
                         labelText: 'Topic',
@@ -46,6 +52,7 @@ class AddChildInfoView extends StatelessWidget{
                     ),
                     Divider(),
                     TextFormField(
+                      initialValue: this.info!=null?this.info.content:null,
                       minLines: 4,
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
@@ -77,12 +84,15 @@ class AddChildInfoView extends StatelessWidget{
                       },
                     ),
                     MaterialButton(
-                      child: Text ('Save'),
+                      child: Text (this.info==null?'Save':'Update'),
                       color: Colors.blueGrey,
                       onPressed: ()async{
                         if(_formKey.currentState.validate()){
                           _formKey.currentState.save();
-                          var success = await model.saveChildInfo(this.child.child_id, _topic, _content, _visibility_val);
+                          var success = this.info!=null?
+                          await model.updateChildInfo(this.info.id,this.child.child_id, _topic, _content, _visibility_val):
+                          await model.saveChildInfo(this.child.child_id, _topic, _content, _visibility_val)
+                          ;
                           if(success){
                             Navigator.of(context).pop();
                             Navigator.pushReplacementNamed(context, "child",arguments:this.child);

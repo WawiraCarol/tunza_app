@@ -21,7 +21,7 @@ class SingleChildView extends StatelessWidget {
               items: [
                 BottomNavigationBarItem(icon: Icon(Icons.receipt),title: Text("General")),
                 BottomNavigationBarItem(icon: Icon(Icons.child_friendly),title: Text("Caregivers")),
-                BottomNavigationBarItem(icon: Icon(Icons.call),title:Text("Communication")),
+                BottomNavigationBarItem(icon: Icon(Icons.content_paste),title:Text("Posts")),
               ],
               currentIndex: 0,
               onTap: (i){
@@ -49,8 +49,54 @@ class SingleChildView extends StatelessWidget {
                   child: ListTile(
                     title: Text("${model.infoList[i].topic.toUpperCase()}"),
                     subtitle: Text("${model.infoList[i].content.split('\n').map((s)=>"- $s").join('\n')}"),
+                    trailing: model.state==ViewState.Edit?Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        GestureDetector(
+
+                          child: Icon(Icons.edit,size: 16,color: Colors.green,),
+                          onTap: (){
+                            Navigator.pushNamed(context, "edit_child_info",arguments: [this.child,model.infoList[i]]);
+                          },
+                        ),
+                        GestureDetector(
+                          child: Icon(Icons.delete_forever,size: 16,color: Colors.red,),
+                          onTap: (){
+                            model.setState(ViewState.Delete);
+                            showDialog(context: context,
+                            builder: (context){
+                              return AlertDialog(
+                                title: Text("Delete Confirmation"),
+                                content: Text("You are about to delete your child's information. This action is not reversible."),
+                                actions: <Widget>[
+
+                                  FlatButton(child: Text("Cancel"),
+                                  onPressed: (){
+                                    model.setState(ViewState.Edit);
+                                    Navigator.pop(context);
+                                  },
+                                    color: Colors.blueGrey[50],
+                                  ),
+                                  FlatButton(
+                                    child: Text("Delete"),
+                                    onPressed: ()async{
+                                      Navigator.pop(context);
+                                      await model.deleteChildinfo(model.infoList[i].id, this.child.child_id);
+                                    },color: Colors.red,
+                                  ),
+
+                                ],
+
+                              );
+                            });
+                          },
+
+                        )
+                      ],
+                    ):null,
                     onLongPress: (){
-                      //Todo: add edit and delete functionality
+                      model.state!=ViewState.Edit?model.setState(ViewState.Edit):model.setState(ViewState.Idle);
                     },
                   ),
                 );
@@ -65,7 +111,7 @@ class SingleChildView extends StatelessWidget {
               label: Text("add"),
               tooltip: "add info",
               onPressed: (){
-                Navigator.pushNamed(context, "add_child_info",arguments: this.child);
+                Navigator.pushNamed(context, "add_child_info",arguments: [this.child]);
               },
             ):null,
 
